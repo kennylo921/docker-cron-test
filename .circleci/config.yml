@@ -10,17 +10,16 @@ jobs:
       # test orb commands
       - checkout
       - gcp-gcr/gcr-auth
-      # - run:
-      #     name: Go to app directory
-      #     command: |
-      #       cd app
+      - run:
+          name: Go to app directory
+          command: |
+            cd app
       - gcp-gcr/build-image:
           google-project-id: GOOGLE_PROJECT_ID
-          registry-url: gcr.io/client-dev-ca
-          image: sample-image
+          registry-url: us.gcr.io
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
-          path: ~/app/
-          docker-context: ~/
+          # path: ~/app/
+          # docker-context: ~/
 
       - gcp-gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
