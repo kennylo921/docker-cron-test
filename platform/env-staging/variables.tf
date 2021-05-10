@@ -19,7 +19,7 @@ variable "client_name" {
 }
 
 variable "client_app_name" {
-  default = "drive_flywheel"
+  default = "drive-flywheel"
 }
 
 #--------------------------------------------------------------
@@ -29,4 +29,3 @@ variable "client_app_name" {
 variable bucket_name_unprefixed {
   default = "downloads"
 }
-

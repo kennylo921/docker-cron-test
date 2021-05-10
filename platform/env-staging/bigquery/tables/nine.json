@@ -1,0 +1,26 @@
+[
+  {
+    "name": "io_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Insert Order ID"
+  },
+  {
+    "name": "total_impressions_delivered",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "The number of impressions delivered for the insert order."
+  },
+  {
+    "name": "total_clicks_delivered",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "The number of clicks delivered for the insert order."
+  },
+  {
+    "name": "extract_date",
+    "type": "DATE",
+    "mode": "REQUIRED",
+    "description": "The date the io_id was extracted from Nine."
+  }
+]

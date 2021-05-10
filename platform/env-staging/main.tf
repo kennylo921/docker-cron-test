@@ -19,10 +19,8 @@ terraform {
 }
 
 provider "google" {
-  project     = "client-dev-caradvice"
+  project     = "client-dev-ca"
   region      = "australia-southeast1"
-  credentials = file("mrkloud-gcp-763f9787b8b2.json")
-
 }
 
 #--------------------------------------------------------------
@@ -31,6 +29,7 @@ provider "google" {
 terraform {
   required_version = ">= 0.13"
   backend "remote" {
+    organization = ""
     workspaces {
       name = "staging"
     }
@@ -40,28 +39,63 @@ terraform {
 #--------------------------------------------------------------
 # Modules
 #--------------------------------------------------------------
+module "gce-container" {
+  source = "github.com/terraform-google-modules/terraform-google-container-vm"
+  cos_image_name = "cos-stable-89-16108-403-26"
+  container = {
+    image = "gcr.io/client-dev-ca/sample-image:tagged.15"
 
-module "bigquery" {
-  source = "./bigquery"
-  dataset_id = "${var.environment}_${var.client_app_name}"
-  environment = var.environment
-  vendor = var.vendor
+    env = [
+      {
+        name = "TEST_VAR"
+        value = "Hello World!"
+      },
+    ]
+  }
+
+  restart_policy = "Always"
 }
 
-module "iam" {
-  source = "./iam"
+
+resource "google_service_account" "default" {
+  account_id   = "compute-engine-service-account"
+  display_name = "CarAdvice Compute Engine Service Account"
 }
 
-module "storage" {
-  source = "./storage"
-  vendor = var.vendor
-  environment = var.environment
-  region-code = var.region_code
-  client-app-name = var.client_app_name
-}
+resource "google_compute_instance" "vm" {
+  project      = "client-dev-ca"
+  name         = "test-instance"
+  machine_type = "e2-micro"
+  zone         = "australia-southeast1-a"
 
-module "cloud-functions" {
-  source = "./cloud-functions"
-  bucket-name = module.storage.cloud-function-bucket.name
-  depends_on = [module.storage.cloud-function-bucket]
+  boot_disk {
+    initialize_params {
+      image = module.gce-container.source_image
+    }
+  }
+
+  tags = ["container-vm-example"]
+
+  metadata = {
+    gce-container-declaration = module.gce-container.metadata_value
+  }
+
+  labels = {
+    container-vm = module.gce-container.vm_container_label
+  }
+
+   network_interface {
+    network = "default"
+
+    access_config {
+      // Ephemeral IP
+    }
+  }
+  service_account {
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    email  = google_service_account.default.email
+    scopes = ["cloud-platform"]
+  }
+  allow_stopping_for_update = true
+  depends_on = [google_service_account.default]
 }

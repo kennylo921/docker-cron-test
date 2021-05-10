@@ -27,6 +27,37 @@ jobs:
           image: sample-image
           source-tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
           target-tag: tagged.${CIRCLE_BUILD_NUM}
+  deploy:
+    docker:
+      - image: hashicorp/terraform:0.13.5
+    # https://circleci.com/docs/2.0/env-vars/#alpine-linux
+    shell: /bin/sh -leo pipefail
+    environment:
+      - BASH_ENV: /etc/profile
+    steps:
+      - *determine_environment
+      - checkout
+      - run:
+          name: Setup Terraform credentials
+          command: |
+            echo "credentials \"app.terraform.io\" {
+              token = \"${TERRAFORM_TOKEN}\"
+            }" > ~/.terraformrc
+      - run:
+          name: Terraform initialise
+          command: |
+            cd platform/env-${DEPLOY_ENVIRONMENT}
+            terraform init -input=false -no-color
+      - run:
+          name: Terraform plan
+          command: |
+            cd platform/env-${DEPLOY_ENVIRONMENT}
+            terraform plan -input=false -no-color -out=plan/plan-${CIRCLE_BUILD_NUM}.zip
+      - run:
+          name: Terraform apply
+          command: |
+            cd platform/env-${DEPLOY_ENVIRONMENT}
+            terraform apply -input=false -no-color -auto-approve plan/plan-${CIRCLE_BUILD_NUM}.zip
 workflows:
   version: 2
   deploy_infrastructure:
@@ -36,6 +67,10 @@ workflows:
             branches:
               only:  # only branches matching the below regex filters will run
                 - staging
-      # - deploy:
-      #     requires:
-      #       - build_and_push
+      - deploy:
+          requires:
+            - build_and_push
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - staging
