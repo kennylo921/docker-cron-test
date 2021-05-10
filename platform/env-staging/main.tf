@@ -29,7 +29,7 @@ provider "google" {
 terraform {
   required_version = ">= 0.13"
   backend "remote" {
-    organization = ""
+    organization = "Koddle"
     workspaces {
       name = "staging"
     }
