@@ -18,6 +18,7 @@ jobs:
           google-project-id: GOOGLE_PROJECT_ID
           registry-url: us.gcr.io
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
+          image: sample-image
           # path: ~/app/
           # docker-context: ~/
 
