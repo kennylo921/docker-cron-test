@@ -15,18 +15,5 @@ resource "google_storage_bucket" "csv-bucket" {
   labels = merge({name=local.bucket_name}, local.base_labels)
 }
 
-resource "google_storage_bucket_object" "flightschedule_nine" {
-  name          = "flightschedule_nine/"
-  content       = "Channel 9 Folder"
-  bucket        = "${google_storage_bucket.csv-bucket.name}"
-}
-
-resource "google_storage_bucket_object" "flightschedule_agency_csv" {
-  name          = "flightschedule_agency_csv/"
-  content       = "Manual Agency CSV Folder"
-  bucket        = "${google_storage_bucket.csv-bucket.name}"
-}
-
 
 #gcr.io/client-dev-caradvice/test
-
