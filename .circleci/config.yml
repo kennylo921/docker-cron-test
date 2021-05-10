@@ -7,7 +7,7 @@ jobs:
   build_and_push:
     executor: gcp-gcr/default
     steps:
-      # test orb commands
+      # test orb commands1
       - checkout
       - gcp-gcr/gcr-auth:
           gcloud-service-key: GOOGLE_CREDENTIALS
