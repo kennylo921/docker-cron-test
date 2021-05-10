@@ -9,7 +9,7 @@ jobs:
     steps:
       # test orb commands
       - checkout
-      - gcp-gcr/gcr-auth
+      - gcp-gcr/gcr-auth:
           gcloud-service-key: GOOGLE_CREDENTIALS
       - run:
           name: Go to app directory
