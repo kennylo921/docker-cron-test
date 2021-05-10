@@ -15,19 +15,19 @@ jobs:
           command: |
             cd app
       - gcp-gcr/build-image:
-          registry-url: gcr.io
+          registry-url: gcr.io/client-dev-ca
           image: sample-image
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
           path: ~/app/
           docker-context: ~/app/
 
       - gcp-gcr/push-image:
-          registry-url: gcr.io
+          registry-url: gcr.io/client-dev-ca
           image: sample-image
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
 
       - gcp-gcr/tag-image:
-          registry-url: gcr.io
+          registry-url: gcr.io/client-dev-ca
           image: sample-image
           source-tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
           target-tag: tagged.${CIRCLE_BUILD_NUM}
