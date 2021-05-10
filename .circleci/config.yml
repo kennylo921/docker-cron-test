@@ -14,14 +14,11 @@ jobs:
           name: Go to app directory
           command: |
             cd app
-      - gcp-gcr/build-image:
-          google-project-id: GOOGLE_PROJECT_ID
-          registry-url: us.gcr.io
-          tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
-          image: sample-image
-          # path: ~/app/
-          docker-context: ~/app/
-
+      -run:
+          name: Build app binary and Docker image
+          command: |
+            echo 'export TAG=${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/sample-image -t us.gcr.io/$GOOGLE_PROJECT_ID/sample-image:$TAG .
       - gcp-gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
           registry-url: us.gcr.io
