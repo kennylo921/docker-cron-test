@@ -46,17 +46,17 @@ jobs:
       - run:
           name: Terraform initialise
           command: |
-            cd platform/env-stagin
+            cd platform/env-staging
             terraform init -input=false -no-color
       - run:
           name: Terraform plan
           command: |
-            cd platform/env-stagin
+            cd platform/env-staging
             terraform plan -input=false -no-color -out=plan/plan-${CIRCLE_BUILD_NUM}.zip
       - run:
           name: Terraform apply
           command: |
-            cd platform/env-stagin
+            cd platform/env-staging
             terraform apply -input=false -no-color -auto-approve plan/plan-${CIRCLE_BUILD_NUM}.zip
 workflows:
   version: 2
