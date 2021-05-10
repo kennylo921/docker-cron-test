@@ -16,12 +16,14 @@ jobs:
             cd app
             docker build -t us.gcr.io/client-dev-ca/sample-image:${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM} .
       - gcp-gcr/push-image:
+          gcloud-service-key: GOOGLE_CREDENTIALS
           google-project-id: GOOGLE_PROJECT_ID
           registry-url: us.gcr.io
           image: sample-image
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
 
       - gcp-gcr/tag-image:
+          gcloud-service-key: GOOGLE_CREDENTIALS
           google-project-id: GOOGLE_PROJECT_ID
           registry-url: us.gcr.io
           image: sample-image
