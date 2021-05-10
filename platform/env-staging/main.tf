@@ -43,7 +43,7 @@ module "gce-container" {
   source = "github.com/terraform-google-modules/terraform-google-container-vm"
   cos_image_name = "cos-stable-89-16108-403-26"
   container = {
-    image = "gcr.io/client-dev-ca/sample-image:tagged.15"
+    image = "gcr.io/client-dev-ca/sample-image:v1.0"
 
     env = [
       {
