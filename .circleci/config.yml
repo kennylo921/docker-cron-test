@@ -20,7 +20,7 @@ jobs:
           tag: ${CIRCLE_SHA1:0:7}.${CIRCLE_BUILD_NUM}
           image: sample-image
           # path: ~/app/
-          # docker-context: ~/
+          docker-context: ~/app/
 
       - gcp-gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
